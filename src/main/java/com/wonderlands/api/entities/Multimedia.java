@@ -1,5 +1,7 @@
 package com.wonderlands.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -11,6 +13,7 @@ public class Multimedia {
     private String type; // "image", "video", "audio"
     private String description;
     @ManyToOne
+    @JsonIgnore  // ← Esto evita la serialización de regions
     private Species species;
     
  // Getters y Setters
