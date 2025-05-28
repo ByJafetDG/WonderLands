@@ -13,7 +13,7 @@ public class Species {
     
     @ElementCollection
     @MapKeyColumn(name = "language")
-    @Column(name = "description")
+    @Column(name = "description", length = 10000)
     @CollectionTable(name = "species_descriptions", joinColumns = @JoinColumn(name = "species_id"))
     private Map<String, String> descriptions = new HashMap<>();
     
