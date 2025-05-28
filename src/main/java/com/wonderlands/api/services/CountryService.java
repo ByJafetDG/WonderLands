@@ -39,4 +39,40 @@ public class CountryService {
         
         return regionRepository.findByCountryCode(countryCode);
     }
+        
+    
+    public Country createCountry(Country country) {
+        if(country.getCode() == null || country.getCode().isEmpty()) {
+            throw new IllegalArgumentException("Country code is required");
+        }
+        if(countryRepository.existsById(country.getCode())) {
+            throw new IllegalArgumentException("Country already exists");
+        }
+        return countryRepository.save(country);
+    }
+    
+    public Country updateCountry(String code, Country countryDetails) {
+        Country country = countryRepository.findById(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Country not found"));
+        
+        if(countryDetails.getName() != null) {
+            country.setName(countryDetails.getName());
+        }
+        
+        return countryRepository.save(country);
+    }
+    
+    public void deleteCountry(String code) {
+        Country country = countryRepository.findById(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Country not found"));
+        
+        if(!regionRepository.findByCountryCode(code).isEmpty()) {
+            throw new IllegalStateException("Cannot delete country with associated regions");
+        }
+        
+        countryRepository.delete(country);
+    }
+    
+    
+    
 }
