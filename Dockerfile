@@ -1,14 +1,13 @@
-# Usa una imagen base de Java
+# Fase de construcción
+FROM maven:3.8.6-openjdk-17 AS builder
+WORKDIR /workspace
+COPY pom.xml .
+COPY src src
+RUN mvn clean package -DskipTests
+
+# Fase de ejecución
 FROM openjdk:17-jdk-slim
-
-# Establece el directorio de trabajo
 WORKDIR /app
-
-# Copia el archivo JAR al contenedor (ajusta el nombre del jar si es diferente)
-COPY target/wonderlands-api-0.0.1-SNAPSHOT.jar app.jar
-
-# Expone el puerto (ajusta según tu app)
+COPY --from=builder /workspace/target/wonderlands-api-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-
-# Comando para ejecutar la app
 CMD ["java", "-jar", "app.jar"]
